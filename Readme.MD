@@ -7,8 +7,8 @@ This is a point simulator for a drone. The original code was adapted from [Fligh
 First, we will start by cloning the repo:
 ```
 $ cd ~
-$ git clone https://github.com/hildebrandt-carl/finalsim.git
-$ cd ~/finalsim
+$ git clone https://github.com/hildebrandt-carl/labsim.git
+$ cd ~/labsim
 ```
 
 Next, install all the prerequisites required for this project:
@@ -22,7 +22,7 @@ $ python2 -m pip install scipy
 
 Now we are going to install the ROS dependent dependencies:
 ```
-$ cd ~/finalsim
+$ cd ~/labsim
 $ rosdep install --from-paths src --ignore-src --rosdistro kinetic -y
 $ sudo apt-get install ros-kinetic-joy -y
 $ sudo apt-get install ros-kinetic-imu-filter-madgwick -y
@@ -31,7 +31,7 @@ $ sudo apt-get install ros-kinetic-map-server -y
 
 Next, we are going to compile to the workspace.
 ```
-$ cd ~/finalsim
+$ cd ~/labsim
 $ catkin build
 ```
 
@@ -40,7 +40,7 @@ $ catkin build
 Finally, we can run the simulator
 ```
 $ source ~/finalsim/devel/setup.bash
-$ roslaunch flightcontroller fly.launch map_file:=testmap0.yaml
+$ roslaunch flightcontroller fly.launch map_file:=map_medium0.yaml
 ```
 
 To fly the drone around manually you can click on the keyboard gui and use the following keys:
@@ -54,10 +54,11 @@ To fly the drone around manually you can click on the keyboard gui and use the f
 ## Editing the maps
 
 The following maps have been added for you to use:
-* testmap0.yaml
-* testmap1.yaml
-* testmap2.yaml
-* testmaplarge.yaml
+* map_medium0.yaml
+* map_medium1.yaml
+* map_medium2.yaml
+* map_large0.yaml
+* map_small0.yaml
 
 To edit the map we recommend using Pinta. To install Pinta you can use:
 ```
