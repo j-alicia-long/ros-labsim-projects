@@ -36,7 +36,7 @@ class StateAndSafety():
     self.acceptance_range = rospy.get_param("/state_safety_node/acceptance_range", 0.5)
 
     # Getting the virtual cage parameters
-    cage_params = rospy.get_param('/state_safety_node/virutal_cage', {'x': 5, 'y': 5, 'z': 5})
+    cage_params = rospy.get_param('/state_safety_node/virtual_cage', {'x': 5, 'y': 5, 'z': 5})
     cx, cy, cz = cage_params['x'], cage_params['y'], cage_params['z']
 
     # Create the virtual cage

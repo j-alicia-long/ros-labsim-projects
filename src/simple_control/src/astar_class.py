@@ -11,6 +11,9 @@ class AStarPlanner:
     self.safe_distance = safe_distance
   
   # Find a plan through the map from drone_position to goal_position
+  # Mapdata         : List of lists where each row in the occupancy grid is a list. map_data[0][0] will give you the first cell
+  # Drone Position  : List with two integers. drone_position[0] will give you the x data
+  # Goal Position   : List with two integers. goal_position[0] will give you the x data
   def plan(self, map_data, drone_position, goal_position):
     # Validate the data
     self.validate_data(map_data, drone_position, goal_position)
