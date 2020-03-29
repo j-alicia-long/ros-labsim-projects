@@ -16,4 +16,6 @@
   <include file="$(find flightcontroller)/launch/position.launch">
   </include>
 
+  <node name="path_planner" pkg="simple_control" type="path_planner.py" output="screen" />
+
 </launch>

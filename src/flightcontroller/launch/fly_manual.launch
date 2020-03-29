@@ -16,9 +16,9 @@
   </include>
 
   <node name="state_safety_node" pkg="simple_control" type="state_and_safety.py" output="screen">
-    <param name="virutal_cage/x" type="double" value="10" />
-    <param name="virutal_cage/y" type="double" value="10" />
-    <param name="virutal_cage/z" type="double" value="10" />
+    <param name="virtual_cage/x" type="double" value="10" />
+    <param name="virtual_cage/y" type="double" value="10" />
+    <param name="virtual_cage/z" type="double" value="10" />
     <param name="acceptance_range" type="double" value="0.25" />
   </node>
   <node name="keyboard_manager_node" pkg="simple_control" type="keyboard_manager.py" output="screen"/>
