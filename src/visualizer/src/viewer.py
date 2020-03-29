@@ -39,6 +39,11 @@ class Viewer():
     # Create the trajectory
     self.traj = np.array([[0, 0]])
 
+    # Create the map update
+    self.map_update = np.array([[0, 0]])
+    self.redraw_all = False
+    self.updated_map = False
+
     # Create the viewer
     self.fig = plt.figure()
     self.ax = self.fig.gca(projection='3d')
@@ -72,6 +77,9 @@ class Viewer():
     # Subscribe to the trajectory
     self.trajectory_sub = rospy.Subscriber('/uav/trajectory', Int32MultiArray, self.get_traj)
 
+    # Subscribe to the map update topic
+    self.trajectory_sub = rospy.Subscriber('/map_update', Int32MultiArray, self.get_map_update)
+
     # Run the communication node
     self.DrawLoop()
 
@@ -85,6 +93,10 @@ class Viewer():
     self.traj = np.array(np.reshape(msg.data, (-1, 2)))
     self.traj[:, 0] = self.traj[:, 0]
     self.traj[:, 1] = self.traj[:, 1]
+
+  def get_map_update(self, msg):
+    self.map_update = np.array(np.reshape(msg.data, (-1, 2)))
+    self.updated_map = True
 
 # Call back to get the gps data
   def get_map(self, msg):
@@ -156,7 +168,6 @@ class Viewer():
     y = self.drone_current.position.y
     z = self.drone_current.position.z
     
-    redraw_all = False
     draw_height = 0
 
     # Update the title
@@ -179,7 +190,7 @@ class Viewer():
     self.line.set_3d_properties(np.full(len(self.traj[:,1]), 2.5))
 
     # Only draw obstacles if they have not been drawn before
-    if len(self.ax.collections) < len(self.obstacle_list):
+    if len(self.ax.collections) == 0:
       draw_height = self.drone_current.position.z
       # Draw obstacles
       for obs in self.obstacle_list:
@@ -190,7 +201,16 @@ class Viewer():
         z_obs = [draw_height, draw_height, draw_height, draw_height]
         verts = [list(zip(x_obs, y_obs, z_obs))]
         self.ax.add_collection3d(Poly3DCollection(verts))
-        redraw_all = True
+
+      for pair in self.map_update:
+        obs_x = pair[0]
+        obs_y = pair[1]
+        x_obs = [obs_x, obs_x + 1, obs_x + 1, obs_x]
+        y_obs = [obs_y, obs_y, obs_y + 1, obs_y + 1]
+        z_obs = [draw_height, draw_height, draw_height, draw_height]
+        verts = [list(zip(x_obs, y_obs, z_obs))]
+        self.ax.add_collection3d(Poly3DCollection(verts, facecolors='r'))
+        self.redraw_all = True
 
     # Check for collisions
     if self.insideObstacle():
@@ -199,9 +219,10 @@ class Viewer():
       rospy.signal_shutdown("collision")
 
     # Draw the plot
-    if redraw_all:
+    if self.redraw_all:
       self.fig.canvas.draw()
       self.fig.canvas.flush_events()
+      self.redraw_all = False
     else:
       self.ax.draw_artist(self.ax.patch)
       self.ax.draw_artist(self.scat)
@@ -212,9 +233,9 @@ class Viewer():
     for spine in self.ax.spines.values(): self.ax.draw_artist(spine)
 
     # Remove the obstacles if the drone has changed height significantly
-    if abs(draw_height - z) > 0.5:
-      # while len(self.ax.collections) > 0:
+    if abs(draw_height - z) > 0.5 or self.updated_map:
       self.ax.collections = []
+      self.updated_map = False
 
 
 
