@@ -12,6 +12,13 @@ from nav_msgs.msg import OccupancyGrid
 class PathPlanner():
   # On node initialization
   def __init__(self):
+
+    self.width = -1
+    self.height = -1
+    self.drone_position = []
+    self.goal_position = []
+    self.map = []
+    
     # Create the publisher and subscriber
     self.position_pub = rospy.Publisher('/uav/input/position', Vector3, queue_size=1)
     self.trajectory_pub = rospy.Publisher('/uav/trajectory', Int32MultiArray, queue_size=1)
@@ -20,12 +27,7 @@ class PathPlanner():
     self.atwaypoint_sub = rospy.Subscriber('uav/sensors/atwaypoint', Bool, self.at_waypoint, queue_size = 1)
 
     # Initialize class variables
-    self.width = -1
-    self.height = -1
-    self.drone_position = []
-    self.goal_position = []
     self.have_plan = False
-    self.map = []
     self.at_waypoint = False
 
     # Call the mainloop of our class
