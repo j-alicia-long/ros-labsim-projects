@@ -13,12 +13,12 @@ class PathPlanner():
   # On node initialization
   def __init__(self):
 
+    self.map = []
     self.width = -1
     self.height = -1
     self.drone_position = []
     self.goal_position = []
-    self.map = []
-    
+
     # Create the publisher and subscriber
     self.position_pub = rospy.Publisher('/uav/input/position', Vector3, queue_size=1)
     self.trajectory_pub = rospy.Publisher('/uav/trajectory', Int32MultiArray, queue_size=1)
@@ -60,6 +60,7 @@ class PathPlanner():
   def get_goal(self, msg):
   
     if len(self.goal_position) == 0:
+      rospy.loginfo(str(rospy.get_name()) + ": Recieved Goal {}".format((int(round(msg.x, 0)), int(round(msg.y, 0)))))
       # Get the goal position
       x = int(round(msg.x, 0) - self.origin_x)
       y = int(round(msg.y, 0) - self.origin_y)
@@ -89,7 +90,6 @@ class PathPlanner():
       if not self.have_plan:
         # If we have received the data
         if (len(self.map) != 0) and (len(self.drone_position) == 2) and (len(self.goal_position) == 2):
-          rospy.loginfo(str(rospy.get_name()) + ": Planning trajectory")
           astar = AStarPlanner(safe_distance=1)
           trajectory = astar.plan(self.map, self.drone_position, self.goal_position)
           if trajectory != None:
