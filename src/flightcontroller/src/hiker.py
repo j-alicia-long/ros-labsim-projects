@@ -79,14 +79,10 @@ class Hiker():
         self.origin_x = msg.info.origin.position.x
         self.origin_y = msg.info.origin.position.y
 
-        # TODO: Need to set the persons position
-        # Middle
-        # self.hiker_position = np.array([int(self.width + self.origin_x), int(self.height + self.origin_y)])
-        # Top Right
-
         # Get the map
         self.map = np.reshape(msg.data, (self.width, self.height))
 
+        # Set the hikers position
         hiker_pos_found = False
         while hiker_pos_found == False:
             hiker_rand_pos = randrange(4)
