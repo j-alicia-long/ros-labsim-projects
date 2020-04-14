@@ -170,8 +170,8 @@ class Hiker():
                     msg = Vector3(self.hiker_position[0] + self.origin_x, self.hiker_position[1] + self.origin_y, 0)
                     self.true_pub.publish(msg)
 
-                # If the drone is above 10m publish the tower position of the human
-                if self.drone_position[2] > 10:
+                # If the drone is above 20m publish the tower position of the human
+                if self.drone_position[2] > 20:
                     msg = PointStamped()
                     msg.point.x = self.hiker_position[0] + self.origin_x
                     msg.point.y = self.hiker_position[1] + self.origin_y
