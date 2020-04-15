@@ -85,6 +85,7 @@ class PathPlanner():
     # Get the drone position
     self.goal_position = [x, y]
     self.goal_changed = True
+    self.cancel = False
 
   # The main loop
   def mainloop(self):
@@ -106,7 +107,7 @@ class PathPlanner():
       # If the goal was cancelled
       if self.cancel:
         p_traj.data = []
-        p_traj.data_offset.size = 0
+        p_traj.layout.data_offset = 0
         self.trajectory_pub.publish(p_traj)
         current_trajectory = None
         trajectory = None
