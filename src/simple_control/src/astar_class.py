@@ -1,6 +1,8 @@
-from Queue import PriorityQueue
+# from Queue import PriorityQueue
 import copy 
 import math
+
+import heapq # for A* algorithm
 
 
 class AStarPlanner:
@@ -22,23 +24,70 @@ class AStarPlanner:
     map_data = self.expand_obstacles(map_data, self.safe_distance)
 
     # Create both a frontier and a list to track which nodes are already processed
+    # Init start node
+    curr_pos = tuple(drone_position)
+    # print(curr_pos, goal_position)
+
+    # Objects in nodelists are [est_cost, position]
+    came_from = {}
+    cost_so_far = {}
+    came_from[curr_pos] = None
+    cost_so_far[curr_pos] = 0
+    frontier = [(cost_so_far[curr_pos], curr_pos)]
+
+    # heapq implements a minheap
+    heapq.heapify(frontier)
 
     # While the frontier is not empty
-
+    while frontier:
       # Get the node with the lowest cost
+      current = heapq.heappop(frontier)
 
       # Check if the current node is the goal
+      if curr_pos == tuple(goal_position):
+        break
 
       # For each neighbor of the current node
-
+      curr_pos = current[1]
+      for next_pos in self.get_neighbors(curr_pos, map_data):
+        next_pos = tuple(next_pos)
         # Compute the cost to traverse to that node
+        new_cost = cost_so_far[curr_pos] + self.get_distance(curr_pos, next_pos)
+        if next_pos not in cost_so_far or new_cost < cost_so_far[next_pos]:
+          cost_so_far[next_pos] = new_cost
 
         # Compute the estimated cost to goal (heuristic)
+          priority = new_cost + self.get_distance(goal_position, next_pos)
 
         # Add the neighbors to the frontier with the new cost
+          heapq.heappush(frontier, (priority, next_pos))
+          came_from[next_pos] = curr_pos
+
 
     # Return the trajectory
-    return None
+    return self.build_path(drone_position, goal_position, came_from)
+
+  # Generate trajectory path
+  def build_path(self, node_start, node_end, came_from):
+    current = tuple(node_end)
+    path = []
+
+    while current != tuple(node_start):
+      path.insert(0, list(current))
+      # Check path exists
+      if current not in came_from:
+        return []
+      current = came_from[current]
+    path.insert(0, node_start)
+
+    return path
+
+  # Return the distance between two nodes
+  # Assume node_start and node_end are lists with two integers (x,y)
+  def get_distance(self, node_start, node_end):
+    x1, y1 = node_start
+    x2, y2 = node_end
+    return math.sqrt((x2 - x1)**2 + (y2 - y1)**2)
 
   # Get the children nodes for the current node
   def get_neighbors(self, node_in, map_in):
