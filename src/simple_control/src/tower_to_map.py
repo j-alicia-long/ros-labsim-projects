@@ -12,16 +12,18 @@ class TowerToMap:
     time.sleep(10)
     # Used by the callback for the topic /tower/goal
     self.goal = None
-    
+
     # TODO: Instantiate the Buffer and TransformListener
     self.tfBuffer = tf2_ros.Buffer()
     self.listener = tf2_ros.TransformListener(self.tfBuffer)
 
     # TODO: Goal publisher on topic /uav/input/goal
-    self.goal_pub = rospy.Publisher('/uav/input/goal', Vector3, queue_size=1)
+    # self.goal_pub = rospy.Publisher('/uav/input/goal', Vector3, queue_size=1)
+    self.goal_pub = rospy.Publisher('/hiker/position', Vector3, queue_size=1)
     
     # TODO: Tower goal subscriber to topic /tower/goal
-    self.tower_goal_sub = rospy.Subscriber('/tower/goal', Vector3, self.get_tower_goal, queue_size = 1)
+    # self.tower_goal_sub = rospy.Subscriber('/tower/goal', Vector3, self.get_tower_goal, queue_size = 1)
+    self.tower_goal_sub = rospy.Subscriber('/tower/hiker/position', Vector3, self.get_tower_goal, queue_size = 1)
 
     # start main loop
     self.mainloop()

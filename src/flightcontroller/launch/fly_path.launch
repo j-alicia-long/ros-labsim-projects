@@ -21,11 +21,14 @@
 
   <node name="map_server" pkg="map_server" type="map_server" args="$(find flightcontroller)/maps/$(arg map_file)" />
 
-  <node name="tower" pkg="flightcontroller" type="tower.py" />
+  <!-- <node name="tower" pkg="flightcontroller" type="tower.py" /> -->
+  <node name="hiker_node" pkg="flightcontroller" type="hiker.py" output="screen" />
 
   <node name="tower_to_map" pkg="simple_control" type="tower_to_map.py" />
 
   <node pkg="tf2_ros" type="static_transform_publisher" name="tower_broadcaster" args="-128.5751 77.2557 0 0.5236 0 0 tower world"/>
   <!-- args="x y z yaw pitch roll frame_id child_frame_id" -->
+
+  <node name="rescue" pkg="simple_control" type="rescue.py" />
 
 </launch>
